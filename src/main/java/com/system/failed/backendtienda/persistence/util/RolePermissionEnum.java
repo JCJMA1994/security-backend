@@ -1,6 +1,6 @@
 package com.system.failed.backendtienda.persistence.util;
 
-public enum RolePermission {
+public enum RolePermissionEnum {
 
 	READ_ALL_PRODUCTS,
 	READ_ONE_PRODUCT,
@@ -14,6 +14,6 @@ public enum RolePermission {
 	UPDATE_ONE_CATEGORY,
 	DISABLE_ONE_CATEGORY,
 
-	READ_MY_PROFILE,
+	READ_MY_PROFILE;
 
 }

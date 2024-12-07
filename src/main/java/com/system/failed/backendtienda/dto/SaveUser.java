@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Setter
 public class SaveUser implements Serializable {
 
-	@Size(min = 6, max = 50)
+	@Size(min = 4, max = 50)
 	private String name;
 	private String username;
 

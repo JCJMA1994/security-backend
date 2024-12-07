@@ -6,6 +6,7 @@ import com.system.failed.backendtienda.persistence.entity.Category;
 import com.system.failed.backendtienda.persistence.entity.Product;
 import com.system.failed.backendtienda.persistence.repository.ProductRepository;
 import com.system.failed.backendtienda.services.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
 
+	@Autowired
 	private ProductRepository productRepository;
 
 	@Override

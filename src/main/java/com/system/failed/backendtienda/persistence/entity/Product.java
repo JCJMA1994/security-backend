@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
+@Table(name = "product")
 public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +26,7 @@ public class Product {
 	@JoinColumn(name = "category_id")
 	private Category category;
 
-	public static enum ProductStatus {
+	public enum ProductStatus {
 		ENABLED, DISABLED
 	}
 }

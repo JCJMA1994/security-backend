@@ -2,13 +2,17 @@ package com.system.failed.backendtienda.services.impl;
 
 import com.system.failed.backendtienda.dto.SaveUser;
 import com.system.failed.backendtienda.exception.InvalidPasswordException;
-import com.system.failed.backendtienda.persistence.entity.User;
-import com.system.failed.backendtienda.persistence.repository.UserRepository;
-import com.system.failed.backendtienda.persistence.util.Role;
+import com.system.failed.backendtienda.exception.ObjectNotFoundException;
+import com.system.failed.backendtienda.persistence.entity.security.Role;
+import com.system.failed.backendtienda.persistence.entity.security.User;
+import com.system.failed.backendtienda.persistence.repository.security.UserRepository;
+import com.system.failed.backendtienda.services.RoleService;
 import com.system.failed.backendtienda.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,6 +22,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private RoleService roleService;
 
 	@Override
 	public User registerOneCustomer(SaveUser newUser) {
@@ -29,7 +36,9 @@ public class UserServiceImpl implements UserService {
 		user.setName(newUser.getName());
 		user.setUsername(newUser.getUsername());
 		user.setPassword(passwordEncoder.encode(newUser.getPassword()));
-		user.setRole(Role.ROLE_CUSTOMER);
+		Role defaultRole = roleService.findDefaultRole()
+				.orElseThrow(() -> new ObjectNotFoundException("Default role not found"));
+		user.setRole(defaultRole);
 
 		return userRepository.save(user);
 	}
@@ -65,4 +74,10 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidPasswordException("Password cannot contain spaces");
 		}
 	}
+
+	@Override
+	public Optional<User> findOneByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+
 }

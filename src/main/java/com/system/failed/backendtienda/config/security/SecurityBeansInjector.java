@@ -2,7 +2,7 @@ package com.system.failed.backendtienda.config.security;
 
 
 import com.system.failed.backendtienda.exception.ObjectNotFoundException;
-import com.system.failed.backendtienda.persistence.repository.UserRepository;
+import com.system.failed.backendtienda.persistence.repository.security.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

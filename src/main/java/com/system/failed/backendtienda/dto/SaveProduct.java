@@ -24,7 +24,7 @@ public class SaveProduct implements Serializable {
 	private ProductStatus status;
 
 
-	public static enum ProductStatus {
+	public enum ProductStatus {
 		ENABLED, DISABLED
 	}
 }

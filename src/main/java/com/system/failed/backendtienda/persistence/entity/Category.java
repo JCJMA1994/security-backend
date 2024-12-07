@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "category")
 public class Category {
 
 	@Id
@@ -18,7 +19,7 @@ public class Category {
 	@Enumerated(EnumType.STRING)
 	private CategoryStatus status;
 
-	public static enum CategoryStatus {
+	public enum CategoryStatus {
 		ENABLED, DISABLED
 	}
 

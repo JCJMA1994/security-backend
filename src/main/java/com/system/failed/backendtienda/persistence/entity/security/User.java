@@ -1,6 +1,5 @@
-package com.system.failed.backendtienda.persistence.entity;
+package com.system.failed.backendtienda.persistence.entity.security;
 
-import com.system.failed.backendtienda.persistence.util.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "'user'")
+@Table(name = "user")
 @Setter
 @Getter
 public class User implements UserDetails {
@@ -26,22 +25,21 @@ public class User implements UserDetails {
 	private String name;
 	private String password;
 
-	@Enumerated(EnumType.STRING)
+	@ManyToOne
+	@JoinColumn(name = "role_id")
 	private Role role;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		if (role == null) return null;
 		if (role.getPermissions() == null) return null;
-//		return role.getPermissions().stream()
-//				.map(each -> {
-//					String permission = each.name();
-//					return new SimpleGrantedAuthority(permission);
-//
-//				}).collect(Collectors.toList());
-		return role.getPermissions().stream()
-				.map(Enum::name)
-				.map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+		List<SimpleGrantedAuthority> authorities = role.getPermissions().stream()
+				.map(each -> each.getOperation().getName())
+				.map(SimpleGrantedAuthority::new)
+				.collect(Collectors.toList());
+
+		authorities.add(new SimpleGrantedAuthority("ROLE_" + this.role.getName()));
+		return authorities;
 	}
 
 	@Override
