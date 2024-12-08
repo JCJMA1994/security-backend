@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -35,6 +37,9 @@ public class HttpSecurityConfig {
 	@Autowired
 	private AccessDeniedHandler accessDeniedHandler;
 
+	@Autowired
+	private AuthorizationManager<RequestAuthorizationContext> authorizationManager;
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -42,7 +47,11 @@ public class HttpSecurityConfig {
 				.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider)
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-				.authorizeHttpRequests(HttpSecurityConfig::buildRequestsMatchers)
+				.authorizeHttpRequests(
+						authorizationRequestMatcher -> {
+							authorizationRequestMatcher.anyRequest().access(authorizationManager);
+						}
+				)
 				.exceptionHandling(exceptionHandling -> {
 					exceptionHandling.authenticationEntryPoint(authenticationEntryPoint);
 					exceptionHandling.accessDeniedHandler(accessDeniedHandler);
